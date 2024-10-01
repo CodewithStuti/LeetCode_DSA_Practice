@@ -1,0 +1,38 @@
+class Solution {
+public:
+    bool isGood(vector<int>& nums) {
+        int n = 0;
+        
+        // Find the maximum element manually (instead of using max_element)
+        for (int i = 0; i < nums.size(); i++) {
+            if (nums[i] > n) {
+                n = nums[i];
+            }
+        }
+
+        // Check if nums size matches the expected size n + 1
+        if (nums.size() != n + 1) {
+            return false;
+        }
+
+        // Sort the array
+        sort(nums.begin(), nums.end());
+
+        // Create the base array manually (base[n] = [1, 2, ..., n-1, n, n])
+        vector<int> base;
+        for (int i = 1; i <= n - 1; i++) {
+            base.push_back(i);
+        }
+        base.push_back(n);
+        base.push_back(n);
+
+        // Compare the sorted nums array with the base array
+        for (int i = 0; i < nums.size(); i++) {
+            if (nums[i] != base[i]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+};
