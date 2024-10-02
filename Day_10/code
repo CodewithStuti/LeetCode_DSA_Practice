@@ -1,0 +1,31 @@
+class Solution {
+public:
+    bool canArrange(vector<int>& arr, int k) {
+    // Create a remainder frequency array
+    vector<int> remainder_count(k, 0);
+    
+    // Count the frequency of each remainder
+    for (int num : arr) {
+        int remainder = num % k;
+        // Handling negative remainders to convert them to positive
+        if (remainder < 0) {
+            remainder += k;
+        }
+        remainder_count[remainder]++;
+    }
+    
+    // Check if remainder 0 can form pairs (it needs to be even)
+    if (remainder_count[0] % 2 != 0) {
+        return false;
+    }
+    
+    // Check pairs for other remainders
+    for (int i = 1; i <= k / 2; i++) {
+        // The count of remainder `i` must equal the count of remainder `k - i`
+        if (remainder_count[i] != remainder_count[k - i]) {
+            return false;
+        }
+    }
+    return true;
+}
+};
