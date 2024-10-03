@@ -1,0 +1,49 @@
+class Solution {
+public:
+    int minSubarray(vector<int>& nums, int p) {
+    int n = nums.size();
+    long long totalSum = 0;
+
+    // Step 1: Calculate the total sum of the array
+    for (int num : nums) {
+        totalSum += num;
+    }
+
+    // Step 2: Find the remainder when the total sum is divided by p
+    int remainder = totalSum % p;
+    if (remainder == 0) {
+        // If total sum is already divisible by p, no need to remove anything
+        return 0;
+    }
+
+    // Step 3: Use a hashmap to store prefix sum remainders
+    unordered_map<int, int> prefixRemainders;
+    prefixRemainders[0] = -1; // This helps when the remainder is found from the start of the array
+
+    long long prefixSum = 0;
+    int minLength = n;
+
+    // Step 4: Iterate through the array to find the minimal subarray
+    for (int i = 0; i < n; ++i) {
+        prefixSum += nums[i];
+
+        // Current remainder when dividing prefix sum by p
+        int currentRemainder = prefixSum % p;
+
+        // Calculate target remainder that would make the remaining array divisible by p
+        int targetRemainder = (currentRemainder - remainder + p) % p;
+
+        // Check if this remainder has been seen before
+        if (prefixRemainders.find(targetRemainder) != prefixRemainders.end()) {
+            int subarrayLength = i - prefixRemainders[targetRemainder];
+            minLength = min(minLength, subarrayLength);
+        }
+
+        // Store the current remainder and its index in the map
+        prefixRemainders[currentRemainder] = i;
+    }
+
+    // Step 5: Return the result
+    return (minLength == n) ? -1 : minLength;
+ }
+};
