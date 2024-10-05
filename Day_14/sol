@@ -1,0 +1,37 @@
+class Solution {
+public:
+    bool checkInclusion(string s1, string s2) {
+    // Edge case: If s1 is larger than s2, no permutation of s1 can be a substring of s2
+    if (s1.length() > s2.length()) return false;
+
+    // Initialize two vectors of size 26 to store the frequency of characters for s1 and a sliding window in s2
+    vector<int> s1Freq(26, 0), windowFreq(26, 0);
+
+    // Fill the frequency array for s1
+    for (char c : s1) {
+        s1Freq[c - 'a']++;  // Increment the frequency of the character in s1Freq
+    }
+
+    // Fill the window frequency for the first window in s2 of size equal to s1
+    for (int i = 0; i < s1.length(); i++) {
+        windowFreq[s2[i] - 'a']++;  // Increment the frequency of the character in windowFreq
+    }
+
+    // Compare the frequency arrays of s1 and the first window in s2
+    if (s1Freq == windowFreq) return true;  // If they match, return true
+
+    // Now, start sliding the window across s2
+    for (int i = s1.length(); i < s2.length(); i++) {
+        // Add the current character to the window
+        windowFreq[s2[i] - 'a']++;
+        
+        // Remove the character that is no longer in the window
+        windowFreq[s2[i - s1.length()] - 'a']--;
+
+        // Compare the frequency arrays after adjusting the window
+        if (s1Freq == windowFreq) return true;  // If they match, return true
+    }
+
+    return false;  // If no permutation of s1 is found in s2, return false
+     }
+};
