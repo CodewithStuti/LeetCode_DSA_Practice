@@ -1,0 +1,28 @@
+class Solution {
+public:
+long long dividePlayers(vector<int>& skill) {
+    int n = skill.size();  // Get the number of players
+    sort(skill.begin(), skill.end()); // Sort the skills to easily form pairs
+
+    // Calculate the target total skill for each team.
+    int targetSkill = skill[0] + skill[n - 1]; // The first and last players' skills are added
+
+    long long totalChemistry = 0; // Initialize total chemistry of teams
+
+    // Iterate through the players from both ends to form teams
+    for (int i = 0; i < n / 2; ++i) {
+        int left = skill[i];           // Pick the player with the least skill
+        int right = skill[n - i - 1];  // Pick the player with the highest skill
+
+        // Check if the sum of their skills matches the target skill
+        if (left + right != targetSkill) {
+            return -1;  // If any team doesn't have the target skill, return -1
+        }
+
+        // Calculate the chemistry of this team (product of the players' skills)
+        totalChemistry += (long long)left * right;
+    }
+
+    return totalChemistry; // Return the sum of all team chemistries
+}
+};
