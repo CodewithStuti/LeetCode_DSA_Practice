@@ -1,0 +1,39 @@
+class Solution {
+public:
+// Main function to check sentence similarity
+    bool areSentencesSimilar(string sentence1, string sentence2) {
+    // Helper function to split sentences into words
+    auto splitSentence = [](const string& sentence) {
+        vector<string> words;
+        stringstream ss(sentence);  // Create a stringstream for the sentence
+        string word;
+        while (ss >> word) {  // Extract words separated by spaces
+            words.push_back(word);
+        }
+        return words;
+    };
+
+    // Split both sentences into words
+    vector<string> words1 = splitSentence(sentence1);
+    vector<string> words2 = splitSentence(sentence2);
+
+    // Get the sizes of the two word lists
+    int n1 = words1.size();
+    int n2 = words2.size();
+    int i = 0;  // Pointer to track common words at the beginning
+    int j = 0;  // Pointer to track common words at the end
+
+    // Compare prefix words
+    while (i < n1 && i < n2 && words1[i] == words2[i]) {
+        i++;  // Move forward if words match
+    }
+
+    // Compare suffix words
+    while (j < n1 - i && j < n2 - i && words1[n1 - 1 - j] == words2[n2 - 1 - j]) {
+        j++;  // Move backward if words match
+    }
+
+    // Check if all words in the shorter sentence are matched
+    return i + j == min(n1, n2);
+ }
+};
