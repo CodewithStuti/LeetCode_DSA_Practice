@@ -1,0 +1,38 @@
+class Solution {
+public:
+    int minLength(string s) {
+    // A stack to hold characters that have not yet formed a removable substring
+    stack<char> st;
+
+    // Loop through each character in the string
+    for (char c : s) {
+        // If the stack is not empty, we check if the current character 'c'
+        // and the top of the stack form a removable pair.
+        if (!st.empty()) {
+            char topChar = st.top();  // Get the character on top of the stack
+            
+            // Check for the pair "AB"
+            if (topChar == 'A' && c == 'B') {
+                // If the pair "AB" is found, pop the top element (which is 'A')
+                st.pop();
+                // Do not push 'B' into the stack since we just removed "AB"
+                continue;
+            }
+            // Check for the pair "CD"
+            else if (topChar == 'C' && c == 'D') {
+                // If the pair "CD" is found, pop the top element (which is 'C')
+                st.pop();
+                // Do not push 'D' into the stack since we just removed "CD"
+                continue;
+            }
+        }
+
+        // If no removable pair was found, push the current character onto the stack
+        st.push(c);
+    }
+
+    // The size of the stack now represents the minimum length of the string
+    // because it contains characters that could not be removed.
+    return st.size();
+ }
+};
