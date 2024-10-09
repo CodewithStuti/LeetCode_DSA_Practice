@@ -1,0 +1,28 @@
+class Solution {
+public:
+ int minAddToMakeValid(string s) {
+    int left = 0;   // This keeps track of unmatched opening '(' brackets
+    int right = 0;  // This keeps track of unmatched closing ')' brackets
+
+    // Iterate over each character in the string
+    for (char c : s) {
+        if (c == '(') {
+            // It's an opening bracket, increment 'left' since it's unmatched for now
+            left++;
+        } else {
+            // It's a closing bracket
+            if (left > 0) {
+                // If there's an unmatched opening bracket, match it with this closing one
+                left--;
+            } else {
+                // If there are no unmatched opening brackets, this closing one is unmatched
+                right++;
+            }
+        }
+    }
+
+    // The total number of moves to make the parentheses valid is the sum of unmatched
+    // opening brackets and unmatched closing brackets.
+    return left + right;
+}
+};
