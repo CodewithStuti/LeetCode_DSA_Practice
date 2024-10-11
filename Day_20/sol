@@ -1,0 +1,51 @@
+class Solution {
+public:
+  int smallestChair(vector<vector<int>>& times, int targetFriend) {
+    // Create a vector of arrival and departure events with friend IDs
+    vector<pair<int, int>> arrivals;
+    vector<pair<int, int>> departures;
+
+    for (int i = 0; i < times.size(); ++i) {
+        arrivals.push_back({times[i][0], i});  // store {arrival time, friend id}
+        departures.push_back({times[i][1], i});  // store {departure time, friend id}
+    }
+
+    // Sort both arrival and departure events based on time
+    sort(arrivals.begin(), arrivals.end());
+    sort(departures.begin(), departures.end());
+
+    // Min-heap to store available chairs in increasing order
+    priority_queue<int, vector<int>, greater<int>> availableChairs;
+    for (int i = 0; i < times.size(); ++i) {
+        availableChairs.push(i);  // All friends will eventually use chairs from 0 to n-1
+    }
+
+    // Array to track which chair each friend is sitting on
+    vector<int> friendToChair(times.size(), -1);
+
+    int i = 0, j = 0;  // pointers to process arrivals and departures
+    while (i < times.size()) {
+        // Check if the current event is an arrival or a departure
+        if (arrivals[i].first < departures[j].first) {
+            // A friend arrives, assign them the smallest available chair
+            int chair = availableChairs.top();
+            availableChairs.pop();
+
+            // Record which chair this friend sits on
+            friendToChair[arrivals[i].second] = chair;
+
+            // If this is the target friend, return their chair
+            if (arrivals[i].second == targetFriend) {
+                return chair;
+            }
+            i++;
+        } else {
+            // A friend leaves, make their chair available again
+            availableChairs.push(friendToChair[departures[j].second]);
+            j++;
+        }
+    }
+
+    return -1;  // This should never be reached
+      }
+};
