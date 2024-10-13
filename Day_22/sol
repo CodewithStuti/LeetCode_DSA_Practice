@@ -1,0 +1,64 @@
+class Solution {
+public:
+// The structure to store each element of the heap
+struct Element {
+    int value;  // The actual value
+    int listIndex;  // Which list the value is from
+    int elementIndex;  // The index of the element in its list
+};
+
+// Custom comparator for the priority queue (min-heap)
+struct Compare {
+    bool operator()(Element const& e1, Element const& e2) {
+        return e1.value > e2.value; // Min-heap based on element value
+    }
+};
+
+vector<int> smallestRange(vector<vector<int>>& nums) {
+    int k = nums.size();  // Number of lists
+    int minRange = INT_MAX;  // To store the smallest range
+    int minVal = INT_MAX, maxVal = INT_MIN;  // To store the current min and max values in the window
+
+    // Priority queue (min-heap) to store the smallest element from each list
+    priority_queue<Element, vector<Element>, Compare> minHeap;
+
+    // Step 1: Initialize the heap with the first element from each list
+    for (int i = 0; i < k; ++i) {
+        minHeap.push({nums[i][0], i, 0});  // Add (value, listIndex, elementIndex)
+        maxVal = max(maxVal, nums[i][0]);  // Keep track of the maximum value
+    }
+
+    vector<int> result(2);  // This will store the result range [a, b]
+
+    // Step 2: Process the heap to find the smallest range
+    while (true) {
+        // Get the minimum element from the heap (top of the heap)
+        Element minElement = minHeap.top();
+        minHeap.pop();
+
+        minVal = minElement.value;  // Update the current minimum value
+
+        // Update the smallest range if the current range is smaller
+        if (maxVal - minVal < minRange) {
+            minRange = maxVal - minVal;
+            result[0] = minVal;
+            result[1] = maxVal;
+        }
+
+        // Step 3: Check if we have reached the end of any list
+        // If so, break the loop
+        if (minElement.elementIndex + 1 == nums[minElement.listIndex].size()) {
+            break;
+        }
+
+        // Step 4: Add the next element from the same list to the heap
+        int nextValue = nums[minElement.listIndex][minElement.elementIndex + 1];
+        minHeap.push({nextValue, minElement.listIndex, minElement.elementIndex + 1});
+
+        // Update the current maximum value
+        maxVal = max(maxVal, nextValue);
+    }
+
+    return result;
+ }
+};
