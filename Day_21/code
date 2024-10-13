@@ -1,0 +1,35 @@
+class Solution {
+public:
+// Function to calculate the minimum number of groups
+int minGroups(vector<vector<int>>& intervals) {
+    // Vector to store events: start of an interval (+1) and end of an interval (-1)
+    vector<pair<int, int>> events;
+
+    // Convert intervals into events
+    for (const auto& interval : intervals) {
+        // Entry event (start of interval)
+        events.push_back({interval[0], 1});
+        // Exit event (end of interval + 1)
+        events.push_back({interval[1] + 1, -1});
+    }
+
+    // Sort events by time
+    // If two events have the same time, prioritize the exit event (so end+1 happens before another start)
+    sort(events.begin(), events.end());
+
+    int active = 0;  // To track the number of active intervals at any moment
+    int maxActive = 0;  // Maximum number of overlapping intervals (groups needed)
+
+    // Process each event
+    for (const auto& event : events) {
+        // Update the number of active intervals
+        active += event.second;
+        
+        // Keep track of the maximum number of overlapping intervals
+        maxActive = max(maxActive, active);
+    }
+
+    // Return the maximum number of overlapping intervals, which is the answer
+    return maxActive;
+}
+};
