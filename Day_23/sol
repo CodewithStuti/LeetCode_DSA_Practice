@@ -1,0 +1,25 @@
+class Solution {
+public:
+    long long maxKelements(vector<int>& nums, int k) {
+        // Max heap to store the largest elements
+        priority_queue<int> maxHeap;
+
+        // Insert all elements of nums into the max heap
+        for (int num : nums) {
+            maxHeap.push(num);
+        }
+
+        long long score = 0;  // Initialize score to 0, use long long to handle large numbers
+
+        // Apply k operations
+        for (int i = 0; i < k; i++) {
+            int largest = maxHeap.top();  // Get the largest number from the heap
+            maxHeap.pop();  // Remove the largest element from the heap
+            score += largest;  // Add the largest element to the score
+            maxHeap.push(ceil(largest / 3.0));  // Push ceil(largest / 3) back into the heap
+        }
+
+        return score;  // Return the maximum score after k operations
+    }
+};
+
