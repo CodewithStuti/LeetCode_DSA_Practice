@@ -1,0 +1,35 @@
+class Solution {
+public:
+    string longestDiverseString(int a, int b, int c) {
+        string result = "";
+        // We will keep the characters in (count, character) tuples for a, b, and c
+        tuple<int, char> counts[] = { {a, 'a'}, {b, 'b'}, {c, 'c'} };
+        
+        while (true) {
+            // Sort the counts in descending order by count
+            sort(counts, counts + 3, greater<tuple<int, char>>());
+
+            bool added = false;
+
+            // Try to add the character with the highest remaining count
+            for (int i = 0; i < 3; ++i) {
+                int& count = get<0>(counts[i]);
+                char ch = get<1>(counts[i]);
+
+                // If the result has fewer than 2 characters or the last two characters aren't the same as ch, we can add it
+                if (count > 0 && (result.size() < 2 || result[result.size() - 1] != ch || result[result.size() - 2] != ch)) {
+                    result += ch;
+                    count--;  // Decrease the count of the character
+                    added = true;
+                    break;
+                }
+            }
+
+            // If we were unable to add any character, we're done
+            if (!added) break;
+        }
+
+        return result;
+    }
+};
+
