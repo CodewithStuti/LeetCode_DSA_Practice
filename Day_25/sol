@@ -1,0 +1,36 @@
+class Solution {
+public:
+    int maximumSwap(int num) {
+        // If the number is less than 10, return it directly (single-digit numbers can't be swapped)
+        if (num < 10) return num;
+        
+        // Convert the integer to a string to manipulate individual digits
+        string numStr = to_string(num);
+        
+        // Create a vector to store the last occurrence of each digit (0 to 9)
+        vector<int> last(10, -1);
+        
+        // Populate the 'last' vector with the last index of each digit in numStr
+        for (int i = 0; i < numStr.size(); i++) {
+            last[numStr[i] - '0'] = i;  // Map digit to its last occurrence
+        }
+        
+        // Traverse the digits in the number (represented as a string)
+        for (int i = 0; i < numStr.size(); i++) {
+            // For each digit, check if there exists a larger digit (from 9 down to current digit)
+            for (int d = 9; d > numStr[i] - '0'; d--) {
+                // If a larger digit exists and occurs after the current digit
+                if (last[d] > i) {
+                    // Swap the current digit with this larger digit
+                    swap(numStr[i], numStr[last[d]]);
+                    // Return the new integer after the swap
+                    return stoi(numStr);
+                }
+            }
+        }
+        
+        // If no swap was done, return the original number
+        return num;
+    }
+};
+
