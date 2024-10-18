@@ -1,0 +1,33 @@
+class Solution {
+public:
+    int countMaxOrSubsets(vector<int>& nums) {
+        int maxOr = 0; // To store the maximum possible bitwise OR of any subset
+        int count = 0; // To count how many subsets have the maximum bitwise OR
+        
+        // Calculate the number of subsets (2^n where n is the size of nums)
+        int totalSubsets = 1 << nums.size(); // 2^n subsets
+        
+        // Iterate over all possible subsets
+        for (int i = 0; i < totalSubsets; ++i) {
+            int currentOr = 0; // Holds the OR result for the current subset
+            
+            // Construct subset based on the bits of the number `i`
+            for (int j = 0; j < nums.size(); ++j) {
+                if (i & (1 << j)) { // If the j-th bit of i is set, include nums[j]
+                    currentOr |= nums[j]; // Calculate OR for this subset
+                }
+            }
+            
+            // Update the maximum OR and count accordingly
+            if (currentOr > maxOr) {
+                maxOr = currentOr; // Found a new maximum OR
+                count = 1; // Reset count because we found a new max
+            } else if (currentOr == maxOr) {
+                count++; // Another subset with the same maximum OR
+            }
+        }
+        
+        return count; // Return the number of subsets with maximum OR
+    }
+};
+   
