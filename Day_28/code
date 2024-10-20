@@ -1,0 +1,54 @@
+class Solution {
+public:
+    bool parseBoolExpr(string expression) {
+        stack<char> stk;  // Stack to hold characters during evaluation.
+
+        // Traverse each character of the expression.
+        for (char c : expression) {
+            if (c == ')') {
+                // Temporary stack to collect the inner expression inside parentheses
+                stack<char> temp;
+                
+                // Collect everything inside the parentheses into temp
+                while (stk.top() != '(') {
+                    temp.push(stk.top());
+                    stk.pop();
+                }
+                stk.pop();  // Remove the '(' from stack.
+
+                // The operator preceding '(' (either &, |, or !) will now be at the top of the stack.
+                char operatorChar = stk.top();
+                stk.pop();  // Remove operator from stack.
+
+                // Boolean variables for evaluation
+                bool result = (operatorChar == '&') ? true : false;
+
+                // Evaluate the expression inside parentheses.
+                while (!temp.empty()) {
+                    char tempChar = temp.top();
+                    temp.pop();
+
+                    if (tempChar == 't') {
+                        if (operatorChar == '&') result = result && true;
+                        else if (operatorChar == '|') result = result || true;
+                    } else if (tempChar == 'f') {
+                        if (operatorChar == '&') result = result && false;
+                        else if (operatorChar == '|') result = result || false;
+                    }
+                }
+
+                // If operator is NOT '!', invert the result.
+                if (operatorChar == '!') result = !result;
+
+                // Push the result of the expression back to the stack as 't' or 'f'.
+                stk.push(result ? 't' : 'f');
+            } else if (c != ',' && c != ' ') {
+                // Push non-comma and non-space characters to stack (such as 't', 'f', '!', '&', '|', '(').
+                stk.push(c);
+            }
+        }
+
+        // The final result should be at the top of the stack.
+        return stk.top() == 't';
+    }
+};
