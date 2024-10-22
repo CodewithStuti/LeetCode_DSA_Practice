@@ -1,0 +1,45 @@
+class Solution {
+public:
+    long long kthLargestLevelSum(TreeNode* root, int k) {
+        if (!root) return -1;  // If tree is empty, return -1.
+
+        vector<long long> levelSums;  // To store the sums of each level.
+        queue<TreeNode*> q;  // Queue for level-order traversal (BFS).
+        q.push(root);  // Start BFS with the root node.
+
+        // Perform BFS to calculate level sums.
+        while (!q.empty()) {
+            int levelSize = q.size();  // Number of nodes at the current level.
+            long long currentLevelSum = 0;  // To store the sum of the current level.
+
+            for (int i = 0; i < levelSize; i++) {
+                TreeNode* node = q.front();  // Get the front node in the queue.
+                q.pop();  // Remove the node from the queue.
+
+                currentLevelSum += node->val;  // Add the node's value to the current level sum.
+
+                // If the node has a left child, add it to the queue.
+                if (node->left) {
+                    q.push(node->left);
+                }
+                // If the node has a right child, add it to the queue.
+                if (node->right) {
+                    q.push(node->right);
+                }
+            }
+
+            levelSums.push_back(currentLevelSum);  // Store the sum of the current level.
+        }
+
+        // Sort the sums in descending order.
+        sort(levelSums.begin(), levelSums.end(), greater<long long>());
+
+        // If k is valid, return the kth largest sum, otherwise return -1.
+        if (k <= levelSums.size()) {
+            return levelSums[k - 1];  // kth largest sum (1-based index, so we do k-1).
+        }
+
+        return -1;  // If there are fewer than k levels, return -1.
+    }
+};
+
