@@ -1,0 +1,21 @@
+class Solution {
+public:
+    vector<string> removeSubfolders(vector<string>& folder) {
+    // Sort the folders lexicographically
+    sort(folder.begin(), folder.end());
+
+    vector<string> result;
+    string lastFolder = "";
+
+    for (const string& f : folder) {
+        // Check if the current folder is a subfolder of the last added folder
+        if (lastFolder.empty() || f.find(lastFolder + "/") != 0) {
+            result.push_back(f);
+            lastFolder = f;  // Update the last added folder
+        }
+    }
+
+    return result;
+}
+
+    };
